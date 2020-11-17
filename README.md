@@ -7,3 +7,4 @@
 - Quasar - https://quasar.dev/
 - WebSocket - 
 - WebRTC - https://webrtc.org/
+- Amazon S3 - https://aws.amazon.com/s3/
