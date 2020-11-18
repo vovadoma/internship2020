@@ -1,6 +1,7 @@
 # internship2020
 
 run the frontend:
+- install quasar cli - https://quasar.dev/quasar-cli/installation
 - cd /frontend
 - npm install (first time or add something to the package.json)
 - quasar d
