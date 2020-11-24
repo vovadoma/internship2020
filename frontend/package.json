@@ -6,8 +6,8 @@
   "author": "vova <vladimir.gubarenko@gmail.com>",
   "private": true,
   "scripts": {
-     "dev": "quasar dev",
- 	 "build": "quasar build",
+    "dev": "quasar dev",
+ 	  "build": "quasar build"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
