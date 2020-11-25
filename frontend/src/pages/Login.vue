@@ -20,7 +20,7 @@
           </q-card-section>
           <q-card-actions class="q-px-md row justify-center items-center text-center">
             <q-btn color="white" text-color="black" v-model="text" label="Lost Password?" />
-            <q-btn @submit="checkForm" color="white" text-color="black"  label="Login" />
+            <q-btn @click="checkForm" color="white" text-color="black"  label="Login" />
           </q-card-actions>
         </q-card>
       </div>
@@ -29,7 +29,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
+import { mapState } from 'vuex'
 export default {
   name: 'Login',
   data () {
@@ -40,15 +41,22 @@ export default {
       isPwd: true
     }
   },
+  mounted () {
+    console.log(this.user)
+    console.log(process.env.SERVER_URL)
+  },
   methods: {
     checkForm () {
-      axios({
-        url: '127.0.0.1',
-        method: 'POST'
-      }).then((res) => {
-        res.sendStatus(200)
-      })
+      // axios({
+      //   url: 'localhost',
+      //   method: 'POST'
+      // }).then((res)=>{})
+      const profile = {}
+      this.$store.dispatch('setUserProfile', profile)
     }
+  },
+  computed: {
+    ...mapState(['user'])
   }
 }
 </script>
