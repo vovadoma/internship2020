@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'Signup',
   data () {
@@ -64,12 +65,16 @@ export default {
     }
   },
   mounted () {
+    console.log(this.user)
     console.log(process.env.SERVER_URL)
   },
   methods: {
     submitForm () {
       console.log('Submited')
     }
+  },
+  computed: {
+    ...mapState(['user'])
   }
 }
 
