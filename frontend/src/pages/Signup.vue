@@ -52,6 +52,7 @@
 
 <script>
 import { mapState } from 'vuex'
+
 export default {
   name: 'Signup',
   data () {
@@ -71,6 +72,8 @@ export default {
   methods: {
     submitForm () {
       console.log('Submited')
+      const profile = {}
+      this.$store.dispatch('setUserProfile', profile)
     }
   },
   computed: {

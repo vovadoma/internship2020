@@ -17,6 +17,11 @@ export default function (/* { ssrContext } */) {
     state: {
       user: null
     },
+    actions: {
+      setUserProfile () {
+        console.log('need to call commit')
+      }
+    },
     strict: process.env.DEBUGGING
   })
 
