@@ -55,13 +55,16 @@ export default {
   name: 'Signup',
   data () {
     return {
-      name: 'asd',
+      name: '',
       lname: '',
       phone: null,
       email: '',
       password: '',
       repeatedPassword: ''
     }
+  },
+  mounted () {
+    console.log(process.env.SERVER_URL)
   },
   methods: {
     submitForm () {
