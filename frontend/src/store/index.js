@@ -17,9 +17,15 @@ export default function (/* { ssrContext } */) {
     state: {
       user: null
     },
+    mutations: {
+      setUserProfile (state, profile) {
+        state.user = profile
+        console.log(state)
+      }
+    },
     actions: {
-      setUserProfile () {
-        console.log('need to call commit')
+      setUserProfile ({ commit }, profile) {
+        commit('setUserProfile', profile)
       }
     },
     strict: process.env.DEBUGGING

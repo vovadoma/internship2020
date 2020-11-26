@@ -9,7 +9,7 @@
         lazy-rules
         :rules="[ val => val && val.length > 0 || 'Please enter your name']"/>
       <q-input
-        v-model="lname"
+        v-model="lastname"
         name="lname"
         label="Last Name"
         lazy-rules
@@ -52,14 +52,14 @@
 
 <script>
 import { mapState } from 'vuex'
+import axios from 'axios'
 
 export default {
   name: 'Signup',
   data () {
     return {
-      
       name: '',
-      lname: '',
+      lastname: '',
       phone: null,
       email: '',
       password: '',
@@ -72,9 +72,16 @@ export default {
   },
   methods: {
     submitForm () {
-      console.log('Submited')
-      const profile = {}
+      const profile = {
+        name: this.name,
+        lastname: this.lastname,
+        phone: this.phone,
+        email: this.email,
+        password: this.password
+      }
       this.$store.dispatch('setUserProfile', profile)
+      axios.post('/api/registration')
+        .then(console.log('post'))
     }
   },
   computed: {
