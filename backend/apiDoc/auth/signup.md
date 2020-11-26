@@ -29,8 +29,8 @@
     
     //if invalid data
     {
-        "errors": array //  one or more fields are empty or invalid. Example:  [{"value": "namegmail.com","msg": "Incorrect email","param": "email","location": "body"}]
-        "error": string // common mistake. Example: "User already exists"
+        "errors": [array] //  one or more fields are empty or invalid. Example:  [{"value": "namegmail.com","msg": "Incorrect email","param": "email","location": "body"}]
+        "error": "string" // common mistake. Example: "User already exists"
     }
 
 
