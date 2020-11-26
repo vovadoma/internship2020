@@ -57,6 +57,7 @@ export default {
   name: 'Signup',
   data () {
     return {
+      
       name: '',
       lname: '',
       phone: null,
