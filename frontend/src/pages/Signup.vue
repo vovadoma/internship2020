@@ -81,7 +81,7 @@ export default {
       }
       this.$store.dispatch('setUserProfile', profile)
       axios.post('/api/registration')
-        .then(console.log('post'))
+        .then(console.log('post')) 
     }
   },
   computed: {
