@@ -2,12 +2,11 @@
   <q-page class=" row justify-center items-center text-center">
     <div class="column">
       <div class="row">
-        <q-card >
-          <h5 class="text-h5 q-my-md">Log in</h5>
+        <q-card flat>
           <q-card-section>
             <q-form class="q-gutter-md">
-              <q-input  v-model="email" type="email" label="email" />
-              <q-input v-model="password" label="password" :type="isPwd ? 'password' : 'text'">
+              <q-input  v-model="email" type="email" label="E-mail" :rules="[val => !!val || 'Email is missing', isValidEmail]"/>
+              <q-input v-model="password" label="Password" :type="isPwd ? 'password' : 'text'" :rules="[ val => val && val.length > 0 || 'Please enter your email']">
                 <template v-slot:append>
                   <q-icon
                     :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -38,7 +37,8 @@ export default {
       email: '',
       password: '',
       text: '',
-      isPwd: true
+      isPwd: true,
+      regEmail: ''
     }
   },
   mounted () {
@@ -53,6 +53,10 @@ export default {
       // }).then((res)=>{})
       const profile = {}
       this.$store.dispatch('setUserProfile', profile)
+    },
+    isValidEmail () {
+      const emailPattern = /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/
+      return emailPattern.test(this.regEmail) || 'Invalid email'
     }
   },
   computed: {
