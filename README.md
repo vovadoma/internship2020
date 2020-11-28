@@ -6,15 +6,15 @@ run the frontend:
 - npm install (first time or add something to the package.json)
 - quasar d
 
-run the server:
+run the backend:
 - npm install nodemon -g
 
 hot reload
 - npm run serve (typescript compile, leave on the terminal window)
-- nodemon lib/index.js
+- nodemon dist/app.js
 
 only run
-- node lib/index.js
+- npm run serve
 
 # 
 - Node.js - https://nodejs.org
