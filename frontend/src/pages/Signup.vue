@@ -1,16 +1,16 @@
 <template>
-<q-form class="fixed-center" method="post" @submit="submitForm">
+<q-form class="fixed-center" @submit="submitForm">
   <q-item class="row">
     <q-item-section class="q-mr-xl">
       <q-input
         v-model="name"
-        name="name"
+        name="firstName"
         label="First Name"
         lazy-rules
         :rules="[ val => val && val.length > 0 || 'Please enter your name']"/>
       <q-input
         v-model="lastname"
-        name="lname"
+        name="lastName"
         label="Last Name"
         lazy-rules
         :rules="[ val => val && val.length > 0 || 'Please enter your last name']"/>
@@ -73,15 +73,21 @@ export default {
   methods: {
     submitForm () {
       const profile = {
-        name: this.name,
-        lastname: this.lastname,
+        firstName: this.name,
+        lastName: this.lastname,
         phone: this.phone,
         email: this.email,
-        password: this.password
+        password: this.password,
+        repeatPassword: this.repeatedPassword
       }
+
       this.$store.dispatch('setUserProfile', profile)
-      axios.post('/api/registration')
-        .then(console.log('post')) 
+
+      axios.post('http://localhost:5000/api/registration', {
+        formData: profile
+      })
+        .then(console.log('post'))
+        .catch(e => console.log(e))
     }
   },
   computed: {

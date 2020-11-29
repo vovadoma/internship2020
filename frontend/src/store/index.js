@@ -17,11 +17,6 @@ export default function (/* { ssrContext } */) {
     state: {
       user: null
     },
-<<<<<<< HEAD
-    actions: {
-      setUserProfile () {
-        console.log('need to call commit')
-=======
     mutations: {
       setUserProfile (state, profile) {
         state.user = profile
@@ -31,7 +26,6 @@ export default function (/* { ssrContext } */) {
     actions: {
       setUserProfile ({ commit }, profile) {
         commit('setUserProfile', profile)
->>>>>>> registration_form
       }
     },
     strict: process.env.DEBUGGING
