@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-// import example from './module-example'
-
 Vue.use(Vuex)
 
 /*
@@ -16,12 +14,26 @@ Vue.use(Vuex)
 
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
-    modules: {
-      // example
+    state: {
+      user: null
     },
-
-    // enable strict mode (adds overhead!)
-    // for dev mode only
+<<<<<<< HEAD
+    actions: {
+      setUserProfile () {
+        console.log('need to call commit')
+=======
+    mutations: {
+      setUserProfile (state, profile) {
+        state.user = profile
+        console.log(state)
+      }
+    },
+    actions: {
+      setUserProfile ({ commit }, profile) {
+        commit('setUserProfile', profile)
+>>>>>>> registration_form
+      }
+    },
     strict: process.env.DEBUGGING
   })
 
