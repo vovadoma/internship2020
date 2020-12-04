@@ -7,7 +7,7 @@
         </q-toolbar-title>
         <q-item>
           <q-btn class="q-mr-sm" to="/register" color="primary" label="Sign Up" />
-          <q-btn to="/" color="primary" label="Log in" />
+          <q-btn to="/login" color="primary" label="Log in" />
         </q-item>
       </q-toolbar>
     </q-header>
