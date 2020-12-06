@@ -86,7 +86,11 @@ export default {
       axios.post('http://localhost:5000/api/registration', {
         formData: profile
       })
-        .then(console.log('post'))
+        .then(res => {
+          if (res.data.token) {
+            this.$store.dispatch('setUserToken', res.data.token)
+          }
+        })
         .catch(e => console.log(e))
     }
   },
