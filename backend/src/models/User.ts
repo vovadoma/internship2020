@@ -6,6 +6,7 @@ type TUser = {
     phone: string,
     email: string,
     password: string,
+    resetToken: string,
 }
 
 const UserScheme = new Schema({
@@ -14,6 +15,7 @@ const UserScheme = new Schema({
     phone: { type: String },
     email: { type: String, unique: true },
     password: { type: String },
+    resetToken: { data: String, default: '' },
 });
 
 const User = model<TUser & Document>("Users", UserScheme);

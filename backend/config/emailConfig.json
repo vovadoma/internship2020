@@ -1,0 +1,8 @@
+{
+    "SMTP_HOST": "smtp.gmail.com",
+    "SMTP_PORT": 587,
+    "AUTH": {
+        "LOGIN": "nodemailerintership@gmail.com",
+        "PASS": "123123QW" 
+    }
+}

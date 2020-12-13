@@ -19,6 +19,16 @@ export const loginValid = [
     check('password', 'Field cannot be empty').notEmpty().isLength({ min: 6 }).withMessage('The password has to be minimum 6 characters'),
 ]
 
-export const resetValid = [
+export const forgotValid = [
     check('email', 'Field cannot be empty').notEmpty().isEmail().withMessage('Invalid email address'),
+]
+
+export const resetValid = [
+    check('password', 'Field cannot be empty').notEmpty().isLength({ min: 6 }).withMessage('The password has to be minimum 6 characters'),
+    check('repeatPassword', 'Field cannot be empty').notEmpty().custom(async (repeatPassword, { req }) => {
+        const password = req.body.password
+        if (password !== repeatPassword) {
+            throw new Error('Passwords must be same')
+        }
+    }),
 ]

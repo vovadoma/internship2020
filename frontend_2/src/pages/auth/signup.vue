@@ -2,15 +2,7 @@
   <div
     class="column q-py-xl justify-center items-center content-center q-mx-xl"
   >
-  <q-banner v-if='getCreatedUser' inline-actions class="fixed-bottom text-white bg-green text-center">
-         <div class='text-h6'>User created!</div>
-      </q-banner>
-     <q-banner v-else-if='getValidationsErrors' inline-actions  class="fixed-bottom text-white bg-red text-center" >
-        <div v-for='error of errorsValid' :key='error'>{{'Error: ' + error}}</div>
-      </q-banner>
-      <q-banner v-else-if='getAuthError' inline-actions class="fixed-bottom text-white bg-red text-center">
-        <div class='text-h6'>{{getAuthError}}</div>
-      </q-banner>
+
     <div class="text-h2 text-bold q-py-xl">Sign Up</div>
 
     <q-form class="wrapper" @submit.prevent.stop="onSubmit">
@@ -65,12 +57,24 @@
 
       </div>
     </q-form>
+    <div class='q-mt-lg'>
+      <q-banner v-if='getCreatedUser' inline-actions class="absolute-bottom text-white bg-green text-center">
+        <div class='text-h6'>User created!</div>
+      </q-banner>
+      <q-banner v-else-if='getValidationsErrors' inline-actions  class="absolute-bottom text-white bg-red text-center" >
+        <div v-for='error of errorsValid' :key='error'>{{'Error: ' + error}}</div>
+      </q-banner>
+      <q-banner v-else-if='getAuthError' inline-actions class="absolute-bottom text-white bg-red text-center">
+        <div class='text-h6'>{{getAuthError}}</div>
+      </q-banner>
+
+    </div>
 
   </div>
 </template>
 
 <script>
-import { mutationTypes, actionTypes } from '../../store/modules/auth'
+import { actionAuthTypes, mutationTypes } from '../../store/modules/auth'
 
 export default {
   data () {
@@ -168,13 +172,15 @@ export default {
     },
 
     onSubmit () {
-      this.$store.dispatch(actionTypes.register, this.formData).then(token => {
+      this.$store.dispatch(actionAuthTypes.register, this.formData).then(token => {
         setTimeout(() => {
-          this.$router.push('/login')
-          this.$store.commit(mutationTypes.clearState)
+          this.$router.push({ name: 'profile', params: { id: this.$store.state.auth.currentUser.id } })
         }, 1000)
       })
     }
+  },
+  mounted () {
+    this.$store.commit(mutationTypes.clearState)
   }
 }
 </script>

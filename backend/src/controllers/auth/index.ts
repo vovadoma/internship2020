@@ -1,6 +1,14 @@
 import login from './loginController'
 import registration from './signupController'
-import reset from './resetController'
+import { forgotPassword, resetPassword, getResetPassword } from './forgotPasswordController'
+import user from './user'
 
 
-export { login, registration, reset }
+export {
+    login,
+    registration,
+    forgotPassword,
+    resetPassword,
+    getResetPassword,
+    user
+}

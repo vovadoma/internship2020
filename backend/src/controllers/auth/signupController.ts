@@ -1,8 +1,7 @@
 import User from "../../models/User";
 import { Request, Response } from 'express';
-import { hashPass } from './utils'
+import { hashPass, signJWT } from './utils'
 import { validationResult } from 'express-validator'
-import { signJWT } from './utils'
 import { JWT_SECRET } from '../../../config/default.json'
 
 
@@ -39,6 +38,6 @@ const registration = async (req: Request, res: Response) => {
         }
     }
 
-    catch (e) { res.json({ error: e.message })}
+    catch (e) { res.json({ error: e.message }) }
 }
 export default registration
