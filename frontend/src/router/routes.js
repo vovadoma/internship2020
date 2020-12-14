@@ -1,4 +1,5 @@
-
+// import auth from '@/src/middleware/auth'
+// import log from '@/src/middleware/log'
 const routes = [
   {
     path: '/',
@@ -8,6 +9,13 @@ const routes = [
       { path: '/login', component: () => import('pages/Login.vue') },
       { path: '/', component: () => import('pages/Index.vue') },
       { path: '/register', component: () => import('pages/Signup.vue') }
+    ]
+  },
+  {
+    path: '/user',
+    component: () => import('layouts/NewLayout.vue'),
+    children: [
+      { path: '/user/settings', component: () => import('pages/Settings.vue') }
     ]
   },
 
