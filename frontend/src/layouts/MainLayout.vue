@@ -19,12 +19,24 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 
 export default {
+
   name: 'MainLayout',
   data () {
     return {
     }
+  },
+  methods: {
+  },
+  beforeMount () {
+    if (!this.token) {
+      this.$router.push({ path: 'login' })
+    }
+  },
+  computed: {
+    ...mapState(['token'])
   }
 }
 </script>
