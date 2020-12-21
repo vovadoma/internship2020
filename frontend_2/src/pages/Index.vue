@@ -6,9 +6,13 @@
     >
   </q-page>
 </template>
-
 <script>
+import { actionAuthTypes } from '../store/modules/auth'
 export default {
-  name: 'PageIndex'
+  name: 'PageIndex',
+  mounted () {
+    this.$store.dispatch(actionAuthTypes.getCurrentUser)
+  }
 }
+
 </script>

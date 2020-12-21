@@ -126,10 +126,8 @@ export default {
 
     onSubmit () {
       this.$store.dispatch(actionAuthTypes.resetPassword, this.formData)
-      setTimeout(() => {
-        this.$router.push({ name: 'login' })
-        this.$store.dispatch(actionAuthTypes.clearState)
-      }, 500)
+      this.$router.push({ name: 'login' })
+      this.$store.dispatch(actionAuthTypes.clearState)
     }
   },
   mounted () {

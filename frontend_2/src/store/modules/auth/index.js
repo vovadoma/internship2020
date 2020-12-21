@@ -82,6 +82,10 @@ export default {
       state.validationsErrors = null
     },
 
+    [mutationTypes.getCurrentUserStart] (state, payload) {
+      state.currentUser = null
+      state.isLoggedIn = false
+    },
     [mutationTypes.getCurrentUserSuccess] (state, payload) {
       state.currentUser = payload
       state.isLoggedIn = true
@@ -129,71 +133,93 @@ export default {
   },
 
   actions: {
-    [actionAuthTypes.register] ({ commit }, formData) {
-      return new Promise((resolve, reject) => {
-        commit(mutationTypes.registerStart)
-        authApi
-          .registerUser(formData)
-          .then(response => {
-            if (response.data.token) {
-              const codeUser = response.data.token.split('.')
-              localStorage.setItem('jwtToken', response.data.token)
-              commit(mutationTypes.registerSuccess, codeUser)
-              resolve(response.data.token)
-            } else if (response.data.errors) {
-              commit(mutationTypes.validationsErrors, response.data.errors)
-            } else {
-              commit(mutationTypes.authError, response.data.error)
-            }
-          })
-          .catch(error => {
-            commit(mutationTypes.authError, error.response.data)
-          })
-      })
+    async [actionAuthTypes.register] ({ commit }, formData) {
+      commit(mutationTypes.registerStart)
+      const response = await authApi.registerUser(formData)
+      if (response.data.token) {
+        const codeUser = response.data.token.split('.')
+        localStorage.setItem('jwtToken', response.data.token)
+        commit(mutationTypes.registerSuccess, codeUser)
+        return response.data.token
+      } else if (response.data.data) {
+        commit(mutationTypes.validationsErrors, response.data.data)
+      } else {
+        commit(mutationTypes.authError, response.data.error)
+      }
+    },
+    // [actionAuthTypes.register] ({ commit }, formData) {
+    //   return new Promise((resolve, reject) => {
+    //     commit(mutationTypes.registerStart)
+    //     authApi
+    //       .registerUser(formData)
+    //       .then(response => {
+    //         console.log(response)
+    //         if (response.data.token) {
+    //           const codeUser = response.data.token.split('.')
+    //           localStorage.setItem('jwtToken', response.data.token)
+    //           commit(mutationTypes.registerSuccess, codeUser)
+    //           resolve(response.data.token)
+    //         } else if (response.data.data) {
+    //           commit(mutationTypes.validationsErrors, response.data.data)
+    //         } else {
+    //           commit(mutationTypes.authError, response.data.error)
+    //         }
+    //       })
+    //       .catch(error => {
+    //         commit(mutationTypes.authError, error)
+    //       })
+    //   })
+    // },
+
+    async [actionAuthTypes.login] ({ commit }, formData) {
+      commit(mutationTypes.loginStart)
+      const response = await authApi.loginUser(formData.email, formData.password)
+      if (response.data.token) {
+        const codeUser = response.data.token.split('.')
+        localStorage.setItem('jwtToken', response.data.token)
+        commit(mutationTypes.loginSuccess, codeUser)
+        return response.data.token
+      } else if (response.data.data) {
+        commit(mutationTypes.validationsErrors, response.data.data)
+      } else {
+        commit(mutationTypes.authError, response.data.error)
+      }
     },
 
-    [actionAuthTypes.login] ({ commit }, formData) {
-      return new Promise((resolve, reject) => {
-        commit(mutationTypes.loginStart)
-        authApi
-          .loginUser(formData.email, formData.password)
-          .then(response => {
-            if (response.data.token) {
-              const codeUser = response.data.token.split('.')
-              localStorage.setItem('jwtToken', response.data.token)
-              commit(mutationTypes.loginSuccess, codeUser)
-              resolve(response.data.token)
-            } else if (response.data.errors) {
-              commit(mutationTypes.validationsErrors, response.data.errors)
-            } else {
-              commit(mutationTypes.authError, response.data.error)
-            }
-          })
-          .catch(error => {
-            commit(mutationTypes.authError, error.response.data)
-          })
-      })
-    },
+    // [actionAuthTypes.login] ({ commit }, formData) {
+    //   return new Promise((resolve, reject) => {
+    //     commit(mutationTypes.loginStart)
+    //     authApi
+    //       .loginUser(formData.email, formData.password)
+    //       .then(response => {
+    //         if (response.data.token) {
+    //           const codeUser = response.data.token.split('.')
+    //           localStorage.setItem('jwtToken', response.data.token)
+    //           commit(mutationTypes.loginSuccess, codeUser)
+    //           resolve(response.data.token)
+    //         } else if (response.data.data) {
+    //           commit(mutationTypes.validationsErrors, response.data.data)
+    //         } else {
+    //           commit(mutationTypes.authError, response.data.error)
+    //         }
+    //       })
+    //       .catch(error => {
+    //         commit(mutationTypes.authError, error)
+    //       })
+    //   })
+    // },
 
-    [actionAuthTypes.getCurrentUser] ({ commit }) {
-      return new Promise((resolve, reject) => {
-        authApi
-          .getCurrentUser()
-          .then(response => {
-            if (response.data.user) {
-              commit(mutationTypes.getCurrentUserSuccess, response.data.user)
-              resolve(response.data.user)
-            } else if (response.data.errors) {
-              commit(mutationTypes.validationsErrors, response.data.errors)
-            } else {
-              commit(mutationTypes.authError, response.data.error)
-            }
-          })
-          .catch(error => {
-            commit(mutationTypes.authError, error)
-            reject(error)
-          })
-      })
+    async [actionAuthTypes.getCurrentUser] ({ commit }) {
+      commit(mutationTypes.getCurrentUserStart)
+      const response = await authApi.getCurrentUser()
+      if (response.data.user) {
+        commit(mutationTypes.getCurrentUserSuccess, response.data.user)
+        return response.data.user
+      } else if (response.data.data) {
+        commit(mutationTypes.validationsErrors, response.data.data)
+      } else {
+        commit(mutationTypes.authError, response.data.error)
+      }
     },
 
     [actionAuthTypes.logout] ({ commit }) {
@@ -201,62 +227,41 @@ export default {
       commit(mutationTypes.clearState)
     },
 
-    [actionAuthTypes.forgotPassword] ({ commit }, email) {
-      return new Promise((resolve, reject) => {
-        commit(mutationTypes.forgotPasswordStart)
-        authApi
-          .forgotPassword(email)
-          .then((response) => {
-            if (response.data.message) {
-              commit(mutationTypes.forgotPasswordSucces, response.data.message)
-              resolve(response.data.message)
-            } else if (response.data.errors) {
-              commit(mutationTypes.validationsErrors, response.data.errors)
-            } else {
-              commit(mutationTypes.authError, response.data.error)
-            }
-          }).catch(error => {
-            commit(mutationTypes.authError, error.response.data)
-          })
-      })
+    async [actionAuthTypes.forgotPassword] ({ commit }, email) {
+      commit(mutationTypes.forgotPasswordStart)
+      const response = await authApi.forgotPassword(email)
+      if (response.data.message) {
+        commit(mutationTypes.forgotPasswordSucces, response.data.message)
+        return response.data.message
+      } else if (response.data.data) {
+        commit(mutationTypes.validationsErrors, response.data.data)
+      } else {
+        commit(mutationTypes.authError, response.data.error)
+      }
     },
 
-    [actionAuthTypes.getResetPassword] ({ commit }, resetToken) {
-      return new Promise((resolve, reject) => {
-        commit(mutationTypes.getResetPasswordStart)
-        authApi
-          .getResetPassword(resetToken)
-          .then((response) => {
-            if (response.data.userId) {
-              commit(mutationTypes.getResetPasswordSucces, response.data.userId._id)
-              resolve(response.data.userId._id)
-            } else {
-              commit(mutationTypes.authError, response.data.error)
-            }
-          }).catch(error => {
-            commit(mutationTypes.authError, error.response.data)
-          })
-      })
+    async [actionAuthTypes.getResetPassword] ({ commit }, resetToken) {
+      commit(mutationTypes.getResetPasswordStart)
+      const response = await authApi.getResetPassword(resetToken)
+      if (response.data.userId) {
+        commit(mutationTypes.getResetPasswordSucces, response.data.userId._id)
+        return response.data.userId._id
+      } else {
+        commit(mutationTypes.authError, response.data.error)
+      }
     },
 
-    [actionAuthTypes.resetPassword] ({ commit }, formData) {
-      return new Promise((resolve, reject) => {
-        commit(mutationTypes.resetPasswordStart)
-        authApi
-          .resetPassword(formData.password, formData.repeatPassword, formData.userId)
-          .then((response) => {
-            if (response.data.message) {
-              commit(mutationTypes.resetPasswordSucces, response.data.message)
-              resolve(response.data.message)
-            } else if (response.data.errors) {
-              commit(mutationTypes.validationsErrors, response.data.errors)
-            } else {
-              commit(mutationTypes.authError, response.data.error)
-            }
-          }).catch(error => {
-            commit(mutationTypes.authError, error.response.data)
-          })
-      })
+    async [actionAuthTypes.resetPassword] ({ commit }, formData) {
+      commit(mutationTypes.resetPasswordStart)
+      const response = await authApi.resetPassword(formData.password, formData.repeatPassword, formData.userId)
+      if (response.data.message) {
+        commit(mutationTypes.resetPasswordSucces, response.data.message)
+        return response.data.message
+      } else if (response.data.data) {
+        commit(mutationTypes.validationsErrors, response.data.data)
+      } else {
+        commit(mutationTypes.authError, response.data.error)
+      }
     }
   },
 
@@ -278,6 +283,9 @@ export default {
     },
     getUserId (state) {
       return state.userId
+    },
+    getCurrentUser (state) {
+      return state.currentUser
     }
   }
 }

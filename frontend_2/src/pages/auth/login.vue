@@ -1,33 +1,24 @@
 <template>
-  <div
-    class="column q-py-xl justify-center items-center content-center q-mx-xl"
-  >
+  <div class="column q-py-xl justify-center items-center">
     <div class="text-h2 text-bold q-py-xl">Log In</div>
-    <q-form class="wrapper" @submit.prevent.stop="onSubmit">
-      <div class="forms q-col-gutter-x-xl">
-        <div class="col">
+    <q-form @submit.prevent.stop="onSubmit">
+        <div>
           <q-item-label class="text-h6 text-weight-regular">Email</q-item-label>
           <q-input
-            ref="email"
             type="text"
             class="form"
             square
             outlined
-            standout="text-dark"
             :rules="[(val) => handleValidate('email',val)]"
             v-model="email"
             @change="onChangeValue('email', email)"
           />
-          <q-item-label class="text-h6 text-weight-regular"
-            >Password</q-item-label
-          >
+          <q-item-label class="text-h6 text-weight-regular">Password</q-item-label>
           <q-input
-            ref="password"
             :type="!isPwd ? 'text' : 'password'"
             class="form"
             square
             outlined
-            standout="text-dark"
             :rules="[(val) => handleValidate('password',val)]"
             v-model="password"
             @change="onChangeValue('password', password)"
@@ -59,21 +50,22 @@
               label="Log in"
               :disabled='getSubmiting'
             />
-            <q-banner v-if='getValidationsErrors' inline-actions  class="fixed-bottom text-white bg-red">
-                <div class='text-center' v-for='error of errorsValid' :key='error'>{{'Error: ' + error}}</div>
-            </q-banner>
-            <q-banner v-else-if='getAuthError' inline-actions class="fixed-bottom text-white bg-red">
-              <div class='text-center'> {{getAuthError}}</div>
-            </q-banner>
           </div>
-        </div>
       </div>
     </q-form>
+    <div class='q-mt-lg'>
+      <q-banner v-if='getValidationsErrors' class="absolute-bottom text-white bg-red">
+          <div class='text-center' v-for='error of errorsValid' :key='error'>{{'Error: ' + error}}</div>
+      </q-banner>
+      <q-banner v-else-if='getAuthError' class="absolute-bottom text-white bg-red">
+        <div class='text-center'> {{getAuthError}}</div>
+      </q-banner>
+    </div>
   </div>
 </template>
 
 <script>
-import { actionAuthTypes, mutationTypes } from '../../store/modules/auth'
+import { actionAuthTypes } from '../../store/modules/auth'
 export default {
   data () {
     return {
@@ -125,23 +117,13 @@ export default {
     }
   },
   mounted () {
-    this.$store.commit(mutationTypes.clearState)
+    this.$store.dispatch(actionAuthTypes.logout)
   }
 }
 
 </script>
 
 <style lang="scss" scoped>
-.forms {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
-  align-content: center;
-  justify-content: center;
-  grid-auto-columns: flex;
-  grid-auto-rows: flex;
-  grid-auto-flow: column;
-}
 .btns {
   display: flex;
   justify-content: space-between;

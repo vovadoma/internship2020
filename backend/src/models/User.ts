@@ -6,6 +6,7 @@ type TUser = {
     phone: string,
     email: string,
     password: string,
+    avatar: string,
     resetToken: string,
 }
 
@@ -15,6 +16,7 @@ const UserScheme = new Schema({
     phone: { type: String },
     email: { type: String, unique: true },
     password: { type: String },
+    avatar: { type: String, default: '' },
     resetToken: { data: String, default: '' },
 });
 

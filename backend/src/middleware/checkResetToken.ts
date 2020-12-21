@@ -11,7 +11,7 @@ export default async (req: Request & { user?: object }, res: Response, next: Nex
     }
     const user = await User.findOne({ resetToken: token })
     if (user) {
-        jwt.verify(token, JWT_SECRET, (err: any, decodedData: any) => {
+        jwt.verify(token, JWT_SECRET, (err, decodedData) => {
             if (err) {
                 res.status(401).json({ error: 'Token error' });
                 return;

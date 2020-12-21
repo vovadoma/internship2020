@@ -1,7 +1,6 @@
 
 const routes = [
   {
-    mode: 'history',
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
@@ -16,7 +15,7 @@ const routes = [
   },
 
   {
-    mode: 'history',
+    name: '404',
     path: '*',
     component: () => import('pages/Error404.vue')
   }

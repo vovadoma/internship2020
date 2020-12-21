@@ -1,7 +1,7 @@
 import axios from './axios'
 
 const registerUser = formData => {
-  return axios.post('api/registration', { formData: formData })
+  return axios.post('api/registration', { formData })
 }
 const loginUser = (email, password) => {
   return axios.post('api/login', { email, password })

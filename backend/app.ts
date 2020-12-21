@@ -1,8 +1,8 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { router } from "./src/router/authRoutes";
+import { authRouter, profileRouter } from "./src/router/";
+import bodyParser from 'body-parser'
 import models from "./src/models";
 import { MONGO_DB_URI, MONGO_DB_NAME, PORT, HOST } from "./config/default.json"
-
 
 const server = async () => {
     try {
@@ -17,9 +17,10 @@ const server = async () => {
             );
             next();
         })
-
         app.use(express.json());
-        app.use("/api", router)
+        app.use(bodyParser.urlencoded({ extended: true }));    // Middleware for reading request body
+        app.use('/static', express.static('uploads'));
+        app.use("/api", authRouter, profileRouter)
 
         app.listen(PORT, HOST, () => {
             console.log(`server has been started on port: ${PORT}`);

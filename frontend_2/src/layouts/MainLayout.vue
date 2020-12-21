@@ -1,4 +1,4 @@
-<template>
+<template  >
   <q-layout view="lHh Lpr lFf" >
     <q-header elevated>
 
@@ -14,10 +14,13 @@
           <q-btn class="q-mr-sm bg-white text-dark no-border-radius" to="/register" label="Sign Up" />
           <q-btn to="/login" class='bg-white text-dark no-border-radius' label="Log in" />
         </q-item>
-      <template v-if='isLoggedIn'>
 
+      <template v-else>
         <q-btn>
-        <q-avatar color="primary" text-color="white" class='q-mx-md'>{{currentUser.firstName[0]}}</q-avatar>
+          <q-avatar size="50px" v-if='currentUser.avatar || currentUser.avatar == null'>
+            <img :src='[`http://localhost:5000/static/${currentUser.avatar}`]'>
+          </q-avatar>
+        <q-avatar color="primary" text-color="white" class='q-mx-md' v-else>{{currentUser.firstName[0]}}</q-avatar>
           <q-menu anchor="bottom middle" self="top middle" label='log'>
             <q-item clickable :to="{name: 'profile', params: {id: currentUser.id}}" class='text-dark'>
               <q-item-section>
@@ -57,7 +60,8 @@ export default {
   computed: {
     ...mapState({
       isLoggedIn: state => state.auth.isLoggedIn,
-      currentUser: state => state.auth.currentUser
+      currentUser: state => state.auth.currentUser,
+      authError: state => state.profile.authError
     })
   },
   methods: {
@@ -66,6 +70,7 @@ export default {
       this.$router.push({ name: 'home' })
     }
   }
+
 }
 </script>
 

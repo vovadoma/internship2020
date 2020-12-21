@@ -67,7 +67,6 @@
       <q-banner v-else-if='getAuthError' inline-actions class="absolute-bottom text-white bg-red text-center">
         <div class='text-h6'>{{getAuthError}}</div>
       </q-banner>
-
     </div>
 
   </div>
@@ -173,9 +172,7 @@ export default {
 
     onSubmit () {
       this.$store.dispatch(actionAuthTypes.register, this.formData).then(token => {
-        setTimeout(() => {
-          this.$router.push({ name: 'profile', params: { id: this.$store.state.auth.currentUser.id } })
-        }, 1000)
+        this.$router.push({ name: 'profile', params: { id: this.$store.state.auth.currentUser.id } })
       })
     }
   },

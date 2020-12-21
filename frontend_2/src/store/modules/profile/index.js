@@ -2,86 +2,143 @@ import profileApi from '../../../api/profile'
 
 export const mutationTypes = {
   clearState: '[profile] clearState',
+  editProfileError: '[profile] editProfileError',
+  authProfileError: '[profile] authProfileError',
 
   getUserProfileStart: '[profile] getUserProfileStart',
   getUserProfileSuccess: '[profile] getUserProfileSuccess',
-  getUserProfileError: '[profile] getUserProfileError',
 
   getSettingProfileUserStart: '[profile] getSettingProfileUserStart',
   getSettingProfileUserSuccess: '[profile] getSettingProfileUserSuccess',
-  getSettingProfileUserError: '[profile] getSettingProfileUserError'
+  editUserData: '[profile] editUserData',
+
+  putEditProfileUserStart: '[profile] putEditProfileUserStart',
+  putEditProfileUserSuccess: '[profile] putEditProfileUserSuccess',
+  putEditProfileUserValid: '[profile] putEditProfileUserValid'
+
 }
+
 export const actionProfileTypes = {
   getUserProfile: '[profile] getUserProfile',
-  getSettingProfileUser: '[profile] getSettingProfileUser'
-
+  getSettingProfileUser: '[profile] getSettingProfileUser',
+  putEditProfileUser: '[profile] putEditProfileUser'
 }
 export default {
   state: {
-    userData: null,
-    userPofileError: null
+    userData: {},
+    userPofileError: null,
+    userValidEditErrors: null,
+    userEditSucces: null,
+    authProfileError: false,
+    editData: {}
   },
 
   mutations: {
+    [mutationTypes.clearState] (state) {
+      state.userData = {}
+      state.editUserData = {}
+      state.userPofileError = null
+      state.userValidEditErrors = null
+      state.userEditSucces = null
+      state.authProfileError = false
+    },
 
     [mutationTypes.getUserProfileStart] (state) {
-      state.userData = null
       state.userPofileError = null
+      state.authProfileError = false
     },
     [mutationTypes.getUserProfileSuccess] (state, payload) {
       state.userData = payload
-    },
-    [mutationTypes.getUserProfileError] (state, payload) {
-      state.userPofileError = payload
+      state.editData = payload
     },
 
     [mutationTypes.getSettingProfileUserStart] (state) {
-      state.userData = null
+      state.userData = {}
     },
     [mutationTypes.getSettingProfileUserSuccess] (state, payload) {
       state.userData = payload
     },
-    [mutationTypes.getSettingProfileUserError] (state, payload) {
+
+    [mutationTypes.putEditProfileUserStart] (state, payload) {
+      state.userEditSucces = false
+    },
+    [mutationTypes.putEditProfileUserSuccess] (state, payload) {
+      state.userEditSucces = true
+      state.userData = payload
+    },
+    [mutationTypes.putEditProfileUserValid] (state, payload) {
+      state.userValidEditErrors = payload.map(el => el.msg)
+    },
+
+    [mutationTypes.editProfileError] (state, payload) {
       state.userPofileError = payload
+    },
+
+    [mutationTypes.authProfileError] (state, payload) {
+      state.authProfileError = payload
+    },
+    [mutationTypes.editUserData] (state, payload) {
+      state.editData[payload.type] = payload.val
     }
   },
 
   actions: {
-    [actionProfileTypes.getUserProfile] ({ commit }, id) {
-      return new Promise((resolve, reject) => {
-        commit(mutationTypes.getUserProfileStart)
-        profileApi
-          .getProfileUser(id)
-          .then(response => {
-            if (response.data.error) {
-              commit(mutationTypes.getUserProfileError, response.data.error)
-              reject(response.data.error)
-            } else {
-              commit(mutationTypes.getUserProfileSuccess, response.data)
-              resolve(response.data)
-            }
-          })
-          .catch(error => {
-            commit(mutationTypes.getUserProfileError, error)
-            reject(error)
-          })
-      })
+    async [actionProfileTypes.getUserProfile] ({ commit }, id) {
+      commit(mutationTypes.getUserProfileStart)
+      const response = await profileApi.getProfileUser(id)
+      if (response.data.error) {
+        commit(mutationTypes.authProfileError, response.data.error)
+        return response.data.error
+      } else {
+        commit(mutationTypes.getUserProfileSuccess, response.data)
+        return response.data
+      }
     },
 
-    [actionProfileTypes.getSettingProfileUser] ({ commit }, id) {
-      return new Promise((resolve, reject) => {
-        commit(mutationTypes.getSettingProfileUserStart)
-        profileApi
-          .getProfileUser(id)
-          .then(response => {
-            commit(mutationTypes.getUserProfileSuccess, response.data.user)
-            resolve(response.data.user)
-          })
-          .catch(error => {
-            commit(mutationTypes.getUserProfileError, error.response.data)
-            reject(error)
-          })
-      })
+    async [actionProfileTypes.getSettingProfileUser] ({ commit }, id) {
+      commit(mutationTypes.getSettingProfileUserStart)
+      const response = await profileApi.getSettingProfileUser(id)
+      if (response.data.error) {
+        commit(mutationTypes.authProfileError, response.data.error)
+        return response.data.error
+      } else {
+        commit(mutationTypes.getUserProfileSuccess, response.data)
+        return response.data
+      }
+    },
+
+    async [actionProfileTypes.putEditProfileUser] ({ commit }, payload) {
+      const formData = new FormData()
+      if (payload.avatar) {
+        formData.append('avatar', payload.avatar[0])
+        formData.append('firstName', payload.firstName)
+        formData.append('lastName', payload.lastName)
+        formData.append('email', payload.email)
+        formData.append('phone', payload.phone)
+        formData.append('timeZone', payload.timeZone)
+      } else {
+        formData.append('avatar', '')
+        formData.append('firstName', payload.firstName)
+        formData.append('lastName', payload.lastName)
+        formData.append('email', payload.email)
+        formData.append('phone', payload.phone)
+        formData.append('timeZone', payload.timeZone)
+      }
+
+      commit(mutationTypes.putEditProfileUserStart)
+      const response = await profileApi.editProfileUser(formData)
+      if (response.data.error) {
+        commit(mutationTypes.editProfileError, response.data.error)
+        return response.data.error
+      } else if (response.data.data) {
+        commit(mutationTypes.putEditProfileUserValid, response.data.data)
+        return response.data.data
+      } else if (response.data.token) {
+        localStorage.setItem('jwtToken', response.data.token)
+        const codeUser = response.data.token.split('.')
+        commit(mutationTypes.putEditProfileUserSuccess, codeUser)
+        return codeUser
+      }
     }
 
   },
@@ -90,8 +147,20 @@ export default {
     getUserData (state) {
       return state.userData
     },
-    getUserProfileError (state) {
+    getEditProfileError (state) {
       return state.userPofileError
+    },
+    getUserEditSucces (state) {
+      return state.userEditSucces
+    },
+    getUserValidEditErrors (state) {
+      return state.userValidEditErrors
+    },
+    getAuthProfileError (state) {
+      return state.authProfileError
+    },
+    getEditData (state) {
+      return state.editData
     }
 
   }
