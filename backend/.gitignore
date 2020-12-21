@@ -2,7 +2,7 @@
 .thumbs.db
 node_modules
 dist
-
+uploads
 
 
 # Log files
