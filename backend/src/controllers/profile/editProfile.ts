@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { JWT_SECRET } from '../../../config/default.json'
-import { signJWT } from './utils'
+import { signJWT } from '../utils'
 import { validationResult } from 'express-validator'
 import User from '../../models/User'
 import Exception from '../../Exception'
