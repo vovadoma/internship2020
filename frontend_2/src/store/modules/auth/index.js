@@ -23,7 +23,6 @@ export const mutationTypes = {
 
   authError: '[auth] authError',
   validationsErrors: '[auth] validationsErrors'
-
 }
 export const actionAuthTypes = {
   register: '[auth] register',
@@ -147,33 +146,13 @@ export default {
         commit(mutationTypes.authError, response.data.error)
       }
     },
-    // [actionAuthTypes.register] ({ commit }, formData) {
-    //   return new Promise((resolve, reject) => {
-    //     commit(mutationTypes.registerStart)
-    //     authApi
-    //       .registerUser(formData)
-    //       .then(response => {
-    //         console.log(response)
-    //         if (response.data.token) {
-    //           const codeUser = response.data.token.split('.')
-    //           localStorage.setItem('jwtToken', response.data.token)
-    //           commit(mutationTypes.registerSuccess, codeUser)
-    //           resolve(response.data.token)
-    //         } else if (response.data.data) {
-    //           commit(mutationTypes.validationsErrors, response.data.data)
-    //         } else {
-    //           commit(mutationTypes.authError, response.data.error)
-    //         }
-    //       })
-    //       .catch(error => {
-    //         commit(mutationTypes.authError, error)
-    //       })
-    //   })
-    // },
 
     async [actionAuthTypes.login] ({ commit }, formData) {
       commit(mutationTypes.loginStart)
-      const response = await authApi.loginUser(formData.email, formData.password)
+      const response = await authApi.loginUser(
+        formData.email,
+        formData.password
+      )
       if (response.data.token) {
         const codeUser = response.data.token.split('.')
         localStorage.setItem('jwtToken', response.data.token)
@@ -185,29 +164,6 @@ export default {
         commit(mutationTypes.authError, response.data.error)
       }
     },
-
-    // [actionAuthTypes.login] ({ commit }, formData) {
-    //   return new Promise((resolve, reject) => {
-    //     commit(mutationTypes.loginStart)
-    //     authApi
-    //       .loginUser(formData.email, formData.password)
-    //       .then(response => {
-    //         if (response.data.token) {
-    //           const codeUser = response.data.token.split('.')
-    //           localStorage.setItem('jwtToken', response.data.token)
-    //           commit(mutationTypes.loginSuccess, codeUser)
-    //           resolve(response.data.token)
-    //         } else if (response.data.data) {
-    //           commit(mutationTypes.validationsErrors, response.data.data)
-    //         } else {
-    //           commit(mutationTypes.authError, response.data.error)
-    //         }
-    //       })
-    //       .catch(error => {
-    //         commit(mutationTypes.authError, error)
-    //       })
-    //   })
-    // },
 
     async [actionAuthTypes.getCurrentUser] ({ commit }) {
       commit(mutationTypes.getCurrentUserStart)
@@ -253,7 +209,11 @@ export default {
 
     async [actionAuthTypes.resetPassword] ({ commit }, formData) {
       commit(mutationTypes.resetPasswordStart)
-      const response = await authApi.resetPassword(formData.password, formData.repeatPassword, formData.userId)
+      const response = await authApi.resetPassword(
+        formData.password,
+        formData.repeatPassword,
+        formData.userId
+      )
       if (response.data.message) {
         commit(mutationTypes.resetPasswordSucces, response.data.message)
         return response.data.message

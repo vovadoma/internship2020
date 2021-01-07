@@ -182,7 +182,6 @@ export default {
 
     onChangeValue (type, val) {
       this.$store.commit(mutationTypes.editUserData, { type, val })
-      console.log(type, val)
     },
 
     onCancel () {
